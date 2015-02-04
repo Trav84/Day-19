@@ -4,7 +4,8 @@ var ListItemView = Backbone.View.extend({
 
 		_.bindAll(
 			this,
-			'onCheckBoxClicked'
+			'onCheckBoxClicked',
+			'onModelChanged'
 		);
 
 		var listItemTemplate = _.template($('#template').html());
@@ -15,14 +16,22 @@ var ListItemView = Backbone.View.extend({
 		this.$checkBox = $(this.$el.find('.item-check-box'));
 
 		this.$checkBox.on('click', this.onCheckBoxClicked);
+		this.model.on('change', this.onModelChanged);
 
 	},
 
 	onCheckBoxClicked: function() {
-		// this.newItem.set({
-		// 	completed: true
-		// });
+		if(this.model.get('completed')) {
+			this.model.set({
+				completed: false
+			});
+		} else
+			this.model.set({
+				completed: true
+			});
+	},
 
+	onModelChanged: function() {
 		this.$el.toggleClass('item-check-box-striked');
 	}
 
