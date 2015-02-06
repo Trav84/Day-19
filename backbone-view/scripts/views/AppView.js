@@ -2,47 +2,65 @@ var AppView = Backbone.View.extend({
 
 	el: '#app-view',
 	initialize: function() {
+		//this.gameCollection = new GameCollection();
 
-		_.bindAll(
-			this,
-			'onKeyUp',
-			'createNewItem',
-			'onCollectionsAdded'
-		);
+		var self = this;
 
-		this.itemsCollection = new ToDoCollection();
+		var Router = Backbone.Router.extend({
+			routes: {
+				'loading': 'loading',
+				'menu': 'menu',
+				'game': 'game',
+				'leaderboard': 'leaderboard',
+				'settings': 'settings',
+				'*path':  'loading'
+			},
 
-		this.$textBox = $('#text-input-box');
-		this.$displayList = $('#display-list');
-		this.$itemCheckBox = $('.item-check-box');
+			loading: function() {
+				console.log('loading screen');
+				self.hideAllPages();
+				self.loadingView.$el.show();
+			},
 
-		this.$textBox.on('keyup', this.onKeyUp);
-		this.$itemCheckBox.on('change', this.onCheckedBox);
-		this.itemsCollection.on('add', this.onCollectionsAdded);
+			menu: function() {
+				console.log('Menu screen');
+				self.hideAllPages();
+				self.menuView.$el.show();
+			},
 
-	},
+			game: function() {
+				console.log('Game screen');
+				self.hideAllPages();
+				self.gameView.$el.show();
+			},
 
-	onKeyUp: function(e) {
-		if(e.which === 13) {
-			this.createNewItem();
-			this.$textBox.val('');
-		}
-	},
+			leaderboard: function() {
+				console.log('Leaderboard screen');
+				self.hideAllPages();
+				self.leaderboardView.$el.show();
+			},
 
-	createNewItem: function() {
-
-		this.newItem = new ToDoModel();
-		this.newItem.set({
-			itemToDo: this.$textBox.val()
+			settings: function() {
+				console.log('Settings screen');
+				self.hideAllPages();
+				self.settingsView.$el.show();
+			}
 		});
 
-		this.itemsCollection.add(this.newItem);
+		var appRouter = new Router();
 
+		this.loadingView = new LoadingView({router: appRouter});
+		this.menuView = new MenuView();
+		this.gameView = new GameView({router: appRouter});
+		this.leaderboardView = new LeaderboardView({router: appRouter});
+		this.settingsView = new SettingsView({router: appRouter});
+
+		Backbone.history.start();
 	},
 
-	onCollectionsAdded: function(toDoItem) {
-		var itemView = new ListItemView({model: toDoItem});
-		this.$displayList.append(itemView.$el);
+	hideAllPages: function() {
+		$('.page-view').hide();
 	}
 
 });
+

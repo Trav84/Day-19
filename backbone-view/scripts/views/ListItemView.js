@@ -25,10 +25,11 @@ var ListItemView = Backbone.View.extend({
 			this.model.set({
 				completed: false
 			});
-		} else
+		} else {
 			this.model.set({
 				completed: true
 			});
+		}
 	},
 
 	onModelChanged: function() {
