@@ -13,6 +13,11 @@ a {
 	color:rgb( 242,233,99 );
 }
 
+#tutorial {
+	background-color: white;
+	border: 1px solid black;
+}
+
 h1 {
 	font-size:3em;
 	font-weight:600;

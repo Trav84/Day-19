@@ -76,7 +76,7 @@ Ball.prototype.render = function() {
 
 var player = new Player();
 var computer = new Computer();
-var ball = new Ball(200, 300);
+var ball = new Ball(Math.random() * 500, 0);
 
 var render = function() {
   context.fillStyle = "#FF00FF";
