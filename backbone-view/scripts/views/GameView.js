@@ -22,7 +22,7 @@ var GameView = Backbone.View.extend({
 
 		//BEGIN LIBRARY CODE
 		var x = 150;
-		var y = 150;
+		var y = 245;
 		var dx = 2;
 		var dy = 4;
 		var WIDTH;
@@ -32,22 +32,26 @@ var GameView = Backbone.View.extend({
   		unicornChar.src = "unicorn_aa.png";
   		var rightDown = false;
 		var leftDown = false;
+		var jump = false;
 
   		//set rightDown or leftDown if the right or left keys are down
 		function onKeyDown(evt) {
 			if (evt.keyCode == 39) rightDown = true;
 			else if (evt.keyCode == 37) leftDown = true;
+			else if (evt.keyCode === 38) upDown = true;
+			else if (evt.keyCode === 32) jump = true;
 		}
 
 		//and unset them when the right or left key is released
 		function onKeyUp(evt) {
 			if (evt.keyCode == 39) rightDown = false;
 			else if (evt.keyCode == 37) leftDown = false;
+			else if (evt.keyCode === 38) upDown = false;
+			else if (evt.keyCode === 32) jump = false;
 		}
 
 		this.$document.keydown(onKeyDown);
 		this.$document.keyup(onKeyUp);
-
 
 		function init() {
 			ctx = $('#tutorial')[0].getContext("2d");
@@ -78,38 +82,48 @@ var GameView = Backbone.View.extend({
 			ctx.drawImage(image, x, y);
 		}
 
+		function flipImage(image, ctx) {
+	    	var scaleH = (-1,1);  // Set horizontal scale to -1 if flip horizontal
+	        posX = WIDTH * (-1,1); // Set x position to -100% if flip horizontal 
+    
+		    ctx.save(); // Save the current state
+		    ctx.scale(scaleH, 1); // Set scale to flip the image
+		    ctx.drawImage(image, posX, y, x, y); // draw the image
+		    ctx.restore(); // Restore the last saved state
+		};
+
 		//END LIBRARY CODE
 
 		function draw() {
 			clear();
-			//circle(x, y, 10);
-			//drawImage(unicornChar, 150, 150);
 
-			if (rightDown) {
+			var canMoveLeft = true;
+			var canMoveRight = true;
+			var canJump = true;
+
+			if((x+79) >= WIDTH) {
+				canMoveRight = false;
+			} else if (x <= 0) {
+				canMoveLeft = false;
+			}
+
+			if (rightDown && canMoveRight) {
 				x += 5;
 			}
   		
-  			else if (leftDown) {
+  			if (leftDown && canMoveLeft) {
   				x -= 5;
   			}
 
-  			drawImage(unicornChar, x, y);
+  			else if(jump && canJump) {
+  			}
+		 
+			drawImage(unicornChar, x, y);
+			//ctx.scale(-1,1);
 
-		 
-			// if (x + dx > WIDTH || x + dx < 0)
-			// 	dx = -dx;
-			// if (y + dy > HEIGHT || y + dy < 0)
-			// 	dy = -dy;
-		 
-			// x += dx;
-			// y += dy;
 		}
 
 		init();
-
-
-
-
 
 		//ctx.strokeRect(335,100,10,100);
 		//ctx.strokeRect(300,200,75,75);
